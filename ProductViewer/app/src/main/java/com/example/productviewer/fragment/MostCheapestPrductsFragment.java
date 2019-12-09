@@ -38,6 +38,7 @@ public class MostCheapestPrductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_most_cheapest_products, null);
         recyclerView = rootView.findViewById(R.id.most_cheapest_products_recyclerview);
 
@@ -49,15 +50,16 @@ public class MostCheapestPrductsFragment extends Fragment {
 
             dummyDataList.add(dummyDataItem);
 
+
         }
 
 
 
-//REFERENCE
+        //REFERENCE
         recyclerView= (RecyclerView) rootView.findViewById(R.id.most_cheapest_products_recyclerview);
 
         //LAYOUT MANAGER
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //ADAPTER
         recyclerView.setAdapter(new ProductsAdapter(dummyDataList, getActivity()));
@@ -68,7 +70,8 @@ public class MostCheapestPrductsFragment extends Fragment {
 
     @Override
     public String toString() {
-        return "All Products";
+
+        return "Most Cheapest Products";
     }
 
 

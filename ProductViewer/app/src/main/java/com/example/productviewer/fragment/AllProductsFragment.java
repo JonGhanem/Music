@@ -58,11 +58,11 @@ public class AllProductsFragment extends Fragment {
 
 
 
-//REFERENCE
+        //REFERENCE
         recyclerView= (RecyclerView) rootView.findViewById(R.id.all_products_recyclerview);
 
-        //LAYOUT MANAGER
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        //LAYOUT MANAGER
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         //ADAPTER
         recyclerView.setAdapter(new ProductsAdapter(dummyDataList, getActivity()));
