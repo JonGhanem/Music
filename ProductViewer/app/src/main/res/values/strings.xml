@@ -22,5 +22,8 @@
     <string name="product_name">product_name</string>
     <string name="product_details">product_details</string>
     <string name="product_viewer">Product Viewer</string>
+    <string name="menu_retrofit">Retrofit Retrieving Method</string>
+    <string name="menu_http">HTTP Retrieving Method</string>
+
 
 </resources>
