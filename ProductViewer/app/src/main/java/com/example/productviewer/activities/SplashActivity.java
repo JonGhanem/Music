@@ -9,15 +9,21 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.productviewer.R;
+import com.example.productviewer.api.CallbackProduct;
 import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
+import com.example.productviewer.model.Product;
+
+import java.util.List;
+
+import static com.example.productviewer.App.COMMUNICATION_TYPE;
+import static com.example.productviewer.App.SHARED_PREFERENCE;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static TextView data;
+    public TextView data;
 
-    private String sharedValue;
-
+    List<Product> calledProductList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +54,23 @@ public class SplashActivity extends AppCompatActivity {
         myThread.start();
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SHARED_PREFERENCE, MODE_PRIVATE);
-        sharedValue = sharedPreferences.getString(MainActivity.COMMUNICATION_TYPE, "");
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
+        String sharedValue = sharedPreferences.getString(COMMUNICATION_TYPE, "");
 
-        if(sharedValue.equals("http")) {
+        if (sharedValue.equals("http")) {
 
             httpRun();
 
-        }else if(sharedValue.equals("retrofit")){
+        } else if (sharedValue.equals("retrofit")) {
 
             retrofitRun();
 
-        }else{
-            SharedPreferences.Editor editor= sharedPreferences.edit();
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            editor.putString(MainActivity.COMMUNICATION_TYPE,"retrofit");
+            editor.putString(COMMUNICATION_TYPE, "retrofit");
+
+            editor.apply();
 
             Toast.makeText(this, "first time", Toast.LENGTH_SHORT).show();
 
@@ -71,11 +79,27 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    public void httpRun(){
+    public void httpRun() {
 
         FetchHttpConnection fetchHttpConnection = new FetchHttpConnection();
-        fetchHttpConnection.execute();
-        Toast.makeText(this, "Change to HTTP", Toast.LENGTH_SHORT).show();
+        fetchHttpConnection.setCallBack(new CallbackProduct() {
+            @Override
+            public void callback(List<Product> productList) {
+
+
+                data.setText(productList.get(0).getProduct().getDescription());
+
+                Toast.makeText(getApplicationContext(), "HTTP", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failedCallback(String s) {
+
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+
+            }
+        }).execute();
+
 
     }
 
@@ -83,8 +107,19 @@ public class SplashActivity extends AppCompatActivity {
     public void retrofitRun() {
 
         FetchRetrofitConnection fetchRetrofitConnection = new FetchRetrofitConnection();
-        fetchRetrofitConnection.runFetchRetrofitConnection();
-        Toast.makeText(this, "Change to Retrofit", Toast.LENGTH_SHORT).show();
+        fetchRetrofitConnection.runFetchRetrofitConnection(new CallbackProduct() {
+            @Override
+            public void callback(List<Product> productList) {
+                calledProductList = productList;
+                data.setText(calledProductList.get(0).getProduct().getName());
+                Toast.makeText(SplashActivity.this, "Retrofit", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void failedCallback(String s) {
+
+                Toast.makeText(SplashActivity.this, "Retrofit failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -19,10 +19,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.callback.Callback;
+
 public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
 
-    Gson gson = new Gson();
-    StringBuffer buffer = new StringBuffer();
+    private Gson gson = new Gson();
+    private StringBuffer buffer = new StringBuffer();
+    private CallbackProduct callbackProduct;
+
+    public FetchHttpConnection setCallBack(CallbackProduct callBack){
+        this.callbackProduct = callBack;
+        return this;
+    }
 
 
 
@@ -44,10 +52,8 @@ public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
             while ((line = bufferedReader.readLine()) != null) {
                 buffer.append(line);
             }
-        } catch (MalformedURLException e) {
-
-            e.printStackTrace();
         } catch (IOException e) {
+
             e.printStackTrace();
         }
         return null;
@@ -57,12 +63,20 @@ public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        SplashActivity.data.setText(buffer.toString());
-
-
         Type productType = new TypeToken<List<Product>>(){}.getType();
         List<Product> products = gson.fromJson(buffer.toString(), productType);
-        Log.d("data", "onPostExecute: "+products.get(1).getProduct().getName());
+
+        if(products != null) {
+            callbackProduct.
+                    callback(products);
+        }
+        else callbackProduct.failedCallback("failed fetching data");
+
 
     }
+
+
+
+
+
 }

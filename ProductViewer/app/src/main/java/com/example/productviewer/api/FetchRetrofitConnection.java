@@ -3,6 +3,8 @@ package com.example.productviewer.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.productviewer.activities.SplashActivity;
 import com.example.productviewer.model.Product;
 
@@ -14,37 +16,34 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FetchRetrofitConnection  {
+public class FetchRetrofitConnection {
 
-    private JsonHolderApi jsonHolderApi;
-
-    public void runFetchRetrofitConnection (){
+    public void runFetchRetrofitConnection(final CallbackProduct callbackProduct) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.nweave.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        jsonHolderApi = retrofit.create(JsonHolderApi.class);
+        JsonHolderApi jsonHolderApi = retrofit.create(JsonHolderApi.class);
 
         Call<List<Product>> call = jsonHolderApi.getPoducts();
 
         call.enqueue(new Callback<List<Product>>() {
             @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+            public void onResponse(@NonNull Call<List<Product>> call,@NonNull Response<List<Product>> response) {
 
-                if (!response.isSuccessful()) {
-                    SplashActivity.data.setText("code: " + response.code());
-                    return;
-                }
 
                 List<Product> productList = response.body();
+                if (productList != null) {
 
+                    callbackProduct.callback(productList);
+                }
             }
 
             @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
-                SplashActivity.data.setText(t.getMessage());
+            public void onFailure(@NonNull Call<List<Product>> call,@NonNull Throwable t) {
+                callbackProduct.failedCallback(t.getLocalizedMessage());
             }
         });
 

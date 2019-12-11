@@ -2,38 +2,27 @@ package com.example.productviewer.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.example.productviewer.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.productviewer.R;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.Menu;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
+import static com.example.productviewer.App.COMMUNICATION_TYPE;
+import static com.example.productviewer.App.SHARED_PREFERENCE;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    public static final String SHARED_PREFERENCE = "shared_preference";
-    public static final String COMMUNICATION_TYPE = "communication_type";
+
     private AppBarConfiguration mAppBarConfiguration;
 
 
