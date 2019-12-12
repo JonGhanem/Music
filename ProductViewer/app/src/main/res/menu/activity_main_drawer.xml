@@ -21,20 +21,18 @@
 
     </group>
 
-        <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_http"
-
-                android:onClick="httpRetrieve"
-                android:title="@string/menu_http" />
-            <item
-                android:id="@+id/nav_retrofit"
-
-                android:onClick="retrofitRetrieve"
-                android:title="@string/menu_retrofit" />
-        </menu>
-    </item>
+<!--        <item android:title="Communicate">-->
+<!--        <menu>-->
+<!--            <item-->
+<!--                android:id="@+id/nav_http"-->
+<!--                android:onClick="httpRetrieve"-->
+<!--                android:title="@string/menu_http" />-->
+<!--            <item-->
+<!--                android:id="@+id/nav_retrofit"-->
+<!--                android:onClick="retrofitRetrieve"-->
+<!--                android:title="@string/menu_retrofit" />-->
+<!--        </menu>-->
+<!--    </item>-->
 
 
 <!--    <item android:title="Communicate">-->
@@ -49,5 +47,8 @@
 <!--            android:title="@string/menu_send" />-->
 <!--    </menu>-->
 <!--</item>-->
+<!--    -->
+
+<!--                    -->
 
 </menu>

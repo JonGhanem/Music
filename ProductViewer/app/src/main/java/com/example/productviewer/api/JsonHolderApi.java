@@ -10,5 +10,5 @@ import retrofit2.http.GET;
 public interface JsonHolderApi {
 
     @GET("/wp-content/uploads/2012/09/featured.txt")
-    Call<List<Product>> getPoducts();
+    Call<List<Product>> getProducts();
 }

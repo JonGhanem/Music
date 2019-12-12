@@ -3,6 +3,7 @@ package com.example.productviewer.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,15 +20,15 @@ import com.example.productviewer.adapter.ProductsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MostCheapestPrductsFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-
-    List<DummyData> dummyDataList;
+    @BindView(R.id.most_cheapest_products_recyclerview)
+    RecyclerView recyclerView;
 
 
     public MostCheapestPrductsFragment() {
@@ -40,23 +41,17 @@ public class MostCheapestPrductsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_most_cheapest_products, null);
-        recyclerView = rootView.findViewById(R.id.most_cheapest_products_recyclerview);
 
-
-
-        dummyDataList = new ArrayList<>();
-        for(int i = 1; i <= 10 ; i++){
-            DummyData dummyDataItem = new DummyData("product "+ (i-10) , "the price is $$$$");
+        List<DummyData> dummyDataList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            DummyData dummyDataItem = new DummyData("product " + (i - 10), "the price is $$$$");
 
             dummyDataList.add(dummyDataItem);
 
-
         }
 
-
-
         //REFERENCE
-        recyclerView= (RecyclerView) rootView.findViewById(R.id.most_cheapest_products_recyclerview);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.most_cheapest_products_recyclerview);
 
         //LAYOUT MANAGER
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -69,6 +64,7 @@ public class MostCheapestPrductsFragment extends Fragment {
     }
 
     @Override
+    @NonNull
     public String toString() {
 
         return "Most Cheapest Products";
