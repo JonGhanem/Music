@@ -12,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productviewer.R;
-import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.activities.MainActivity;
+import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,16 +24,16 @@ import java.util.List;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
 
     private List<Product> products;
-    private Context context;
-    SelectedItem mSelectedItem ;
-    int mPosition;
+    private SelectedItemIterface mSelectedItemIterface;
+    private int mPosition;
+    Context context;
+
 
     public ProductsAdapter(List<Product> products, Context context) {
+
         this.products = products;
         this.context = context;
-
     }
-
 
     @NonNull
     @Override
@@ -51,20 +54,34 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         holder.productDetailsOverview.setText(product.getDescription());
         holder.productPriceOverView.setText("$ "+product.getPrice());
 
-        Picasso.get()
-                .load(product.getImageUrl()).placeholder(R.drawable.shopping)
-                .into(holder.productImageOverview);
+//        Picasso.get()
+//                .load(product.getImageUrl()).placeholder(R.drawable.shopping)
+//                .into(holder.productImageOverview);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .build();
+        ImageLoader.getInstance().init(config);
+        ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
+
+// Load image, decode it to Bitmap and display Bitmap in ImageView (or any other view
+//	which implements ImageAware interface)
+        if (imageLoader != null) {
+            imageLoader.displayImage(product.getImageUrl(), holder.productImageOverview);
+        } else {
+            imageLoader.cancelDisplayTask(holder.productImageOverview);
+        }
+
         //onClick listener interface for passing selected item to mainActivity
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("adapter", "onClick: ");
-                if(mSelectedItem != null){
+                if(mSelectedItemIterface != null){
 
                     mPosition = position;
                     if(mPosition != RecyclerView.NO_POSITION){
                         Log.d("adapter", "onClick1: ");
-                        mSelectedItem.onItemClickListener(products.get(mPosition));
+                        mSelectedItemIterface.onItemClickListener(products.get(mPosition));
 
 
 
@@ -75,8 +92,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     }
 
-    public void setmSelectedItem(SelectedItem selectedItem){
-        mSelectedItem = selectedItem;
+    public void setmSelectedItemIterface(SelectedItemIterface selectedItemIterface){
+        mSelectedItemIterface = selectedItemIterface;
     }
 
     @Override

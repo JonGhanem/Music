@@ -3,7 +3,7 @@ package com.example.productviewer.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.productviewer.interfaces.ProductCallback;
+import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,11 +19,10 @@ import java.util.List;
 
 public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
 
-    private Gson gson = new Gson();
     private StringBuffer buffer = new StringBuffer();
-    private ProductCallback productcallback;
+    private ProductCallbackInterface productcallback;
 
-    public FetchHttpConnection setCallBack(ProductCallback callBack){
+    public FetchHttpConnection setCallBack(ProductCallbackInterface callBack){
         this.productcallback = callBack;
         return this;
     }
@@ -56,7 +55,7 @@ public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
+        Gson gson = new Gson();
         Type productType = new TypeToken<List<Product>>(){}.getType();
         List<Product> products = gson.fromJson(buffer.toString(), productType);
 

@@ -4,6 +4,6 @@ import com.example.productviewer.model.Product;
 
 import java.util.List;
 
-public interface FragmentCommunicator {
+public interface FragmentCommunicatorInterface {
     void passProductList(List<Product> productList);
 }

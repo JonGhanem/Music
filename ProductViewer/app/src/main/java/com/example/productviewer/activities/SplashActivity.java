@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.productviewer.R;
-import com.example.productviewer.interfaces.ProductCallback;
+import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.model.Product;
@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
     public void httpRun() {
 
         FetchHttpConnection fetchHttpConnection = new FetchHttpConnection();
-        fetchHttpConnection.setCallBack(new ProductCallback() {
+        fetchHttpConnection.setCallBack(new ProductCallbackInterface() {
             @Override
             public void successCallback(List<Product> productList) {
                 loadMainActivity("HTTP", productList);
@@ -82,7 +82,7 @@ public class SplashActivity extends AppCompatActivity {
     public void retrofitRun() {
 
         FetchRetrofitConnection fetchRetrofitConnection = new FetchRetrofitConnection();
-        fetchRetrofitConnection.runFetchRetrofitConnection(new ProductCallback() {
+        fetchRetrofitConnection.runFetchRetrofitConnection(new ProductCallbackInterface() {
             @Override
             public void successCallback(List<Product> productList) {
                 loadMainActivity("Retrofit", productList);

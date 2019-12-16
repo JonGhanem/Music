@@ -16,10 +16,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.productviewer.R;
-import com.example.productviewer.adapter.ProductsAdapter;
 import com.example.productviewer.fragment.ProductDetailsFragment;
-import com.example.productviewer.interfaces.FragmentCommunicator;
-import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.interfaces.FragmentCommunicatorInterface;
+import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,7 +30,7 @@ import butterknife.ButterKnife;
 import static com.example.productviewer.App.COMMUNICATION_TYPE;
 import static com.example.productviewer.App.SHARED_PREFERENCE;
 
-public class MainActivity extends AppCompatActivity implements SelectedItem {
+public class MainActivity extends AppCompatActivity implements SelectedItemIterface {
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItem {
     private AppBarConfiguration mAppBarConfiguration;
     private ArrayList<Product> productList;
     private ProductDetailsFragment productDetailsFragment;
-    private ProductsAdapter mProductsAdapter;
+//    private ProductsAdapter mProductsAdapter;
 
 
     @Override
@@ -107,11 +106,11 @@ public class MainActivity extends AppCompatActivity implements SelectedItem {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void passVal(FragmentCommunicator fragmentCommunicator) {
+    public void passProductItem(FragmentCommunicatorInterface fragmentCommunicatorInterface) {
 
         if(productList!=null){
 
-            fragmentCommunicator.passProductList(productList);
+            fragmentCommunicatorInterface.passProductList(productList);
         }
     }
 

@@ -16,12 +16,13 @@ import android.view.ViewGroup;
 import com.example.productviewer.R;
 import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
-import com.example.productviewer.interfaces.FragmentCommunicator;
-import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.interfaces.FragmentCommunicatorInterface;
+import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,14 +51,14 @@ public class MostCheapestPrductsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        ((MainActivity) getActivity()).passVal(new FragmentCommunicator() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).passProductItem(new FragmentCommunicatorInterface() {
             @Override
             public void passProductList(List<Product> productList) {
                 //ADAPTER
                 ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
                 //intialize SelectedItems for the adapter
-                if(getActivity() instanceof SelectedItem){
-                    productsAdapter.setmSelectedItem((SelectedItem) getActivity());
+                if(getActivity() instanceof SelectedItemIterface){
+                    productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
                 }
                 recyclerView.setAdapter(productsAdapter);
 

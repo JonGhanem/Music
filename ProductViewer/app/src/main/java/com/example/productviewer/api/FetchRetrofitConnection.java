@@ -2,7 +2,7 @@ package com.example.productviewer.api;
 
 import androidx.annotation.NonNull;
 
-import com.example.productviewer.interfaces.ProductCallback;
+import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.model.Product;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FetchRetrofitConnection {
 
-    public void runFetchRetrofitConnection(final ProductCallback productcallback) {
+    public void runFetchRetrofitConnection(final ProductCallbackInterface productcallback) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.nweave.com")

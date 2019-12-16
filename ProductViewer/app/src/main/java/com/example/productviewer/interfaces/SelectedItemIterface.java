@@ -2,6 +2,6 @@ package com.example.productviewer.interfaces;
 
 import com.example.productviewer.model.Product;
 
-public interface SelectedItem {
+public interface SelectedItemIterface {
     void onItemClickListener(Product product);
 }
