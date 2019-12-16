@@ -4,23 +4,27 @@ package com.example.productviewer.fragment;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.productviewer.DummyData;
 import com.example.productviewer.R;
+import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
+import com.example.productviewer.interfaces.FragmentCommunicator;
+import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,27 +44,25 @@ public class MostCheapestPrductsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_most_cheapest_products, null);
+        return inflater.inflate(R.layout.fragment_most_cheapest_products,null);
+    }
 
-        List<DummyData> dummyDataList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            DummyData dummyDataItem = new DummyData("product " + (i - 10), "the price is $$$$");
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+        ((MainActivity) getActivity()).passVal(new FragmentCommunicator() {
+            @Override
+            public void passProductList(List<Product> productList) {
+                //ADAPTER
+                ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+                //intialize SelectedItems for the adapter
+                if(getActivity() instanceof SelectedItem){
+                    productsAdapter.setmSelectedItem((SelectedItem) getActivity());
+                }
+                recyclerView.setAdapter(productsAdapter);
 
-            dummyDataList.add(dummyDataItem);
-
-        }
-
-        //REFERENCE
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.most_cheapest_products_recyclerview);
-
-        //LAYOUT MANAGER
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //ADAPTER
-        recyclerView.setAdapter(new ProductsAdapter(dummyDataList, getActivity()));
-
-
-        return rootView;
+            }
+        });
     }
 
     @Override
@@ -68,6 +70,14 @@ public class MostCheapestPrductsFragment extends Fragment {
     public String toString() {
 
         return "Most Cheapest Products";
+    }
+
+    public void mostCheapestProductsInflate(ArrayList<Product> productList){
+        Log.d("item", productList.get(1).getProduct().getDescription());
+
+        //ADAPTER
+        recyclerView.setAdapter(new ProductsAdapter(productList, getActivity()));
+
     }
 
 

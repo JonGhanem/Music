@@ -7,17 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.productviewer.DummyData;
 import com.example.productviewer.R;
+import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
+import com.example.productviewer.interfaces.FragmentCommunicator;
+import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,27 +41,26 @@ public class MostExpensiveProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_most_expensive_products, null);
 
-        List<DummyData> dummyDataList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            DummyData dummyDataItem = new DummyData("product " + (i + 100), "the price is $$$$");
+        return inflater.inflate(R.layout.fragment_most_expensive_products,null);
+    }
 
-            dummyDataList.add(dummyDataItem);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+        ((MainActivity) getActivity()).passVal(new FragmentCommunicator() {
+            @Override
+            public void passProductList(List<Product> productList) {
+                //ADAPTER
+                ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+                //intialize SelectedItems for the adapter
+                if(getActivity() instanceof SelectedItem){
+                    productsAdapter.setmSelectedItem((SelectedItem) getActivity());
+                }
+                recyclerView.setAdapter(productsAdapter);
 
-        }
-
-        //REFERENCE
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.most_expnsive_products_recyclerview);
-
-//        //LAYOUT MANAGER
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //ADAPTER
-        recyclerView.setAdapter(new ProductsAdapter(dummyDataList, getActivity()));
-
-
-        return rootView;
+            }
+        });
     }
 
     @Override
@@ -64,5 +68,10 @@ public class MostExpensiveProductsFragment extends Fragment {
     public String toString() {
 
         return "Most Expnsive Products";
+    }
+
+    public void mostExpensiveProductsInflate(ArrayList<Product> productList) {
+        //ADAPTER
+        recyclerView.setAdapter(new ProductsAdapter(productList, getActivity()));
     }
 }

@@ -2,6 +2,7 @@ package com.example.productviewer.api;
 
 import androidx.annotation.NonNull;
 
+import com.example.productviewer.interfaces.ProductCallback;
 import com.example.productviewer.model.Product;
 
 import java.util.List;

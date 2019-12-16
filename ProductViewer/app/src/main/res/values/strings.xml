@@ -24,7 +24,7 @@
     <string name="product_viewer">Product Viewer</string>
     <string name="menu_retrofit">Retrofit Retrieving Method</string>
     <string name="menu_http">HTTP Retrieving Method</string>
-
+    <string name="price">price</string>
 
 
 </resources>

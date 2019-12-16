@@ -1,4 +1,4 @@
-package com.example.productviewer.api;
+package com.example.productviewer.interfaces;
 
 import com.example.productviewer.model.Product;
 

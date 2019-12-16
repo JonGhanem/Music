@@ -1,27 +1,27 @@
 package com.example.productviewer.fragment;
 
 
-import android.app.Application;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.productviewer.DummyData;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.productviewer.R;
+import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
+import com.example.productviewer.interfaces.FragmentCommunicator;
+import com.example.productviewer.interfaces.SelectedItem;
+import com.example.productviewer.model.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,41 +36,34 @@ public class AllProductsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_all_products,null);
-
-
-        List<DummyData> dummyDataList = new ArrayList<>();
-        for(int i = 1; i <= 10 ; i++){
-            DummyData dummyDataItem = new DummyData("product "+ i , "the price is $$$$");
-
-            dummyDataList.add(dummyDataItem);
-
-        }
-
-
-
-        //REFERENCE
-        recyclerView= (RecyclerView) rootView.findViewById(R.id.all_products_recyclerview);
-
-//        //LAYOUT MANAGER
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        //ADAPTER
-        recyclerView.setAdapter(new ProductsAdapter(dummyDataList, getActivity()));
-
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_all_products,null);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
+
+        ((MainActivity) getActivity()).passVal(new FragmentCommunicator() {
+            @Override
+            public void passProductList(List<Product> productList) {
+                //ADAPTER
+                ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+                //intialize SelectedItems for the adapter
+                if(getActivity() instanceof SelectedItem){
+                    productsAdapter.setmSelectedItem((SelectedItem) getActivity());
+                }
+                recyclerView.setAdapter(productsAdapter);
+
+            }
+        });
+    }
     @Override
     @NonNull
     public String toString() {
         return "All Products";
     }
-
 }

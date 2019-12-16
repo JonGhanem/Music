@@ -3,6 +3,7 @@ package com.example.productviewer.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.productviewer.interfaces.ProductCallback;
 import com.example.productviewer.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

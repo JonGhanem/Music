@@ -23,5 +23,11 @@
         android:label="@string/menu_most_expensive_product"
         tools:layout="@layout/fragment_most_expensive_products" />
 
+    <fragment
+        android:id="@+id/product_details"
+        android:name="com.example.productviewer.fragment.ProductDetailsFragment"
+        android:label="product details"
+        tools:layout="@layout/fragment_product_details" />
+
 
 </navigation>
