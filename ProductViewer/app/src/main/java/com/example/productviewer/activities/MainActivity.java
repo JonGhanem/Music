@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements SelectedItem {
     public void onItemClickListener(Product product) {
 
         Log.d("item1", "onItemClickListener: "+ product.getProduct().getName());
-        Toast.makeText(this,"hello new fragment", Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putParcelable("selected item", product);
         productDetailsFragment = new ProductDetailsFragment();

@@ -10,36 +10,40 @@
 
     <TextView
         android:id="@+id/product_name_overview"
-        android:layout_width="191dp"
-        android:layout_height="40dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/product_name"
         android:textColor="@color/black"
-        android:textSize="8sp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/price_overview"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/product_image_overview"
         app:layout_constraintTop_toBottomOf="@+id/product_image_overview" />
 
     <ImageView
         android:id="@+id/product_image_overview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="10dp"
-
+        android:adjustViewBounds="true"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/shopping" />
 
     <TextView
         android:id="@+id/product_details_overview"
-        android:layout_width="328dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:maxLines="2"
         android:padding="10dp"
-        android:singleLine="true"
         android:text="@string/product_details"
         android:textColor="@color/black"
         android:textSize="12sp"
@@ -49,15 +53,15 @@
 
     <TextView
         android:id="@+id/price_overview"
-        android:layout_width="137dp"
-        android:layout_height="39dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingRight="10dp"
         android:text="@string/price"
+        android:textColor="@color/black"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/product_details_overview"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/product_name_overview"
-        tools:layout_editor_absoluteY="221dp" />
+        app:layout_constraintEnd_toEndOf="@+id/product_image_overview"
+        app:layout_constraintTop_toBottomOf="@+id/product_image_overview" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

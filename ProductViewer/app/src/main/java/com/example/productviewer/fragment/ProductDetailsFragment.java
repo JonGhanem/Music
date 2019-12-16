@@ -69,7 +69,11 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void setVariable() {
-        Picasso.get().load(mProduct.getProduct().getImageUrl()).into(productImage);
+        Picasso.get().load(mProduct
+                .getProduct()
+                .getImageUrl())
+                .placeholder(R.drawable.shopping)
+                .into(productImage);
         productName.setText("Product Name: "+"\n"+mProduct.getProduct().getName());
         productPrice.setText("price: "+"\n $  "+mProduct.getProduct().getPrice());
         productDescription.setText("Descriptions: "+"\n"+mProduct.getProduct().getDescription());

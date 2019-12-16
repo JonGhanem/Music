@@ -49,10 +49,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
         holder.productNameOverview.setText(product.getName());
         holder.productDetailsOverview.setText(product.getDescription());
-        holder.productPriceOverView.setText(product.getPrice());
+        holder.productPriceOverView.setText("$ "+product.getPrice());
 
         Picasso.get()
-                .load(product.getImageUrl())
+                .load(product.getImageUrl()).placeholder(R.drawable.shopping)
                 .into(holder.productImageOverview);
         //onClick listener interface for passing selected item to mainActivity
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +65,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
                     if(mPosition != RecyclerView.NO_POSITION){
                         Log.d("adapter", "onClick1: ");
                         mSelectedItem.onItemClickListener(products.get(mPosition));
+
+
 
                     }
                 }
