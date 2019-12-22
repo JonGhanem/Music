@@ -28,7 +28,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     private int mPosition;
     Context context;
 
-
     public ProductsAdapter(List<Product> products, Context context) {
 
         this.products = products;
@@ -50,13 +49,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
         Product.ProductBean product = products.get(position).getProduct();
 
+
         holder.productNameOverview.setText(product.getName());
         holder.productDetailsOverview.setText(product.getDescription());
-        holder.productPriceOverView.setText("$ "+product.getPrice());
+        holder.productPriceOverView.setText("$ " + product.getPrice());
 
         Picasso.get()
                 .load(product.getImageUrl()).placeholder(R.drawable.shopping)
                 .into(holder.productImageOverview);
+
 
 //        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
 //                .build();
@@ -76,9 +77,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Log.d("adapter", "onClick: ");
-                if(mSelectedItemIterface != null){
+                if (mSelectedItemIterface != null) {
                     mPosition = position;
-                    if(mPosition != RecyclerView.NO_POSITION){
+                    if (mPosition != RecyclerView.NO_POSITION) {
                         Log.d("adapter", "onClick1: ");
                         mSelectedItemIterface.onItemClickListener(products.get(mPosition));
                     }
@@ -87,7 +88,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         });
     }
 
-    public void setmSelectedItemIterface(SelectedItemIterface selectedItemIterface){
+    public void setmSelectedItemIterface(SelectedItemIterface selectedItemIterface) {
         mSelectedItemIterface = selectedItemIterface;
     }
 
@@ -96,7 +97,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         return products.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView productNameOverview, productDetailsOverview, productPriceOverView;
         ImageView productImageOverview;
 

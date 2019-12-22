@@ -75,7 +75,7 @@ public class MostCheapestPrductsFragment extends Fragment {
     }
 
     public void mostCheapestProductsInflate(ArrayList<Product> productList){
-        Log.d("item", productList.get(1).getProduct().getDescription());
+
 
         //ADAPTER
         recyclerView.setAdapter(new ProductsAdapter(productList, getActivity()));

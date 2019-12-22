@@ -1,10 +1,15 @@
 package com.example.productviewer.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -29,12 +34,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.productviewer.App;
 import com.example.productviewer.R;
 import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.fragment.AllProductsFragment;
 import com.example.productviewer.fragment.ProductDetailsFragment;
+import com.example.productviewer.interfaces.DatabaseFetching;
 import com.example.productviewer.interfaces.FragmentCommunicatorInterface;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.interfaces.SelectedItemIterface;
@@ -62,7 +69,10 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     private AppBarConfiguration mAppBarConfiguration;
-    private ArrayList<Product> mProductList;
+    private List<Product> mProductList;
+    ProductDatabase productDatabase = new ProductDatabase(this);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +81,16 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Log.d("check", "onCreate: ");
-        checkConnectionMethod();
+
+        if(isNetworkAvailable()){
+            checkConnectionMethod();
+        }
+        else
+        {
+          getData();
+        }
+
+
         setupNavController();
     }
 
@@ -127,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 Log.d("check", "successCallback: ");
                 displayToast("HTTP");
 
-                updateAllProductFragment(productList);
+                updateAllProductFragment(mProductList);
 
             }
 
@@ -146,18 +165,25 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             public void successCallback(ArrayList<Product> productList) {
                 mProductList = productList;
                 displayToast("Retrofit");
-                updateAllProductFragment(productList);
+                updateAllProductFragment(mProductList);
             }
 
             @Override
             public void failedCallback(String s) {
 
                 displayToast("Retrofit failed");
+
             }
         }, this);
     }
 
-    private void updateAllProductFragment(ArrayList<Product> productList) {
+    private void updateAllProductFragment(List<Product> productList) {
+
+//        productDatabase.insertData(productList);
+
+        
+        productDatabase.insertData(productList);
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         FragmentCommunicatorInterface fragmentCommunicator = (FragmentCommunicatorInterface) navHostFragment.getChildFragmentManager().getFragments().get(0);
         fragmentCommunicator.passProductList(productList);
@@ -215,4 +241,24 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 .addToBackStack(null)
                 .commit();
     }
+
+    private void getData(){
+        productDatabase.fetchProducts(new DatabaseFetching() {
+            @Override
+            public void onDeliverAllProduct(List<Product> productList) {
+                mProductList = productList;
+                Log.d("hello11", "onDeliverAllProduct: "+mProductList.get(5).getProduct().getName());
+                updateAllProductFragment(productList);
+            }
+        });
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
 }

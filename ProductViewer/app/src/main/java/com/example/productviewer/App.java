@@ -2,6 +2,9 @@ package com.example.productviewer;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 @SuppressLint("Registered")
 public class App extends Application {
@@ -25,11 +28,10 @@ public class App extends Application {
             COL_2 + " TEXT, " +
             COL_3 + " TEXT, " +
             COL_4 + " TEXT, " +
-            COL_5 + " TEXT ) " ;
+            COL_5 + " TEXT )" ;
 
     public static final String DROP_TABLE = " DROP TABLE IF EXISTS " + TABLE_NAME;
 
     public static final String SELECT_ALL_PRODUCTS = " SELECT * FROM " + TABLE_NAME;
-
 
 }
