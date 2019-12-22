@@ -21,6 +21,7 @@ import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 

@@ -1,10 +1,16 @@
 package com.example.productviewer.api;
 
+import android.content.Context;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import com.example.productviewer.activities.MainActivity;
+import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -15,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FetchRetrofitConnection {
 
-    public void runFetchRetrofitConnection(final ProductCallbackInterface productcallback) {
+    public void runFetchRetrofitConnection(final ProductCallbackInterface productcallback, final Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.nweave.com")
@@ -34,7 +40,12 @@ public class FetchRetrofitConnection {
                 List<Product> productList = response.body();
                 if (productList != null) {
 
-                    productcallback.successCallback(productList);
+                    productcallback.successCallback((ArrayList<Product>) productList);
+
+//                    ProductDatabase productDatabase = new ProductDatabase(context);
+//                    productDatabase.insertData(productList);
+
+
                 }
             }
 

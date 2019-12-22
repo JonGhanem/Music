@@ -64,7 +64,7 @@ public class Product implements Parcelable {
         @SerializedName("shopping_cart_item_id")
         private Object shoppingCartItemId;
 
-        protected ProductBean(Parcel in) {
+        public ProductBean(Parcel in) {
             id = in.readString();
             name = in.readString();
             description = in.readString();
@@ -83,6 +83,11 @@ public class Product implements Parcelable {
                 return new ProductBean[size];
             }
         };
+
+        public ProductBean() {
+
+        }
+        private boolean isFromDatabase;
 
         public String getId() {
             return id;

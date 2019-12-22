@@ -2,9 +2,10 @@ package com.example.productviewer.interfaces;
 
 import com.example.productviewer.model.Product;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface ProductCallbackInterface {
-    void successCallback(List<Product> productList);
+    // sending ArrayList from Gson to MainActivity
+    void successCallback(ArrayList<Product> productList);
     void failedCallback(String s);
 }

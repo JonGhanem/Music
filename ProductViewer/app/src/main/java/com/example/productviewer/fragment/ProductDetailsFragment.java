@@ -81,21 +81,21 @@ public class ProductDetailsFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void setVariable() {
 
-//        Picasso.get().load(mProduct
-//                .getProduct()
-//                .getImageUrl())
-//                .placeholder(R.drawable.shopping)
-//                .into(productImage);
+        Picasso.get().load(mProduct
+                .getProduct()
+                .getImageUrl())
+                .placeholder(R.drawable.shopping)
+                .into(productImage);
 
-        // UNIVERSAL IMAGE LOADER SETUP
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
-			.build();
-        ImageLoader.getInstance().init(config);
-        ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
-
-// Load image, decode it to Bitmap and display Bitmap in ImageView (or any other view
-//	which implements ImageAware interface)
-        imageLoader.displayImage(mProduct.getProduct().getImageUrl(), productImage);
+//        // UNIVERSAL IMAGE LOADER SETUP
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
+//			.build();
+//        ImageLoader.getInstance().init(config);
+//        ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
+//
+//// Load image, decode it to Bitmap and display Bitmap in ImageView (or any other view
+////	which implements ImageAware interface)
+//        imageLoader.displayImage(mProduct.getProduct().getImageUrl(), productImage);
 
         productName.setText("Product Name: "+"\n"+mProduct.getProduct().getName());
         productPrice.setText("price: "+"\n $  "+mProduct.getProduct().getPrice());

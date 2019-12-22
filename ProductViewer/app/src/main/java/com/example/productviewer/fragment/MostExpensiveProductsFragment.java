@@ -19,6 +19,8 @@ import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,6 +54,7 @@ public class MostExpensiveProductsFragment extends Fragment {
         ((MainActivity) Objects.requireNonNull(getActivity())).passProductItem(new FragmentCommunicatorInterface() {
             @Override
             public void passProductList(List<Product> productList) {
+
                 //ADAPTER
                 ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
                 //intialize SelectedItems for the adapter

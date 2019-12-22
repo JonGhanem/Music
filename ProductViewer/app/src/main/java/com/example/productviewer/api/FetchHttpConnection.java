@@ -1,8 +1,10 @@
 package com.example.productviewer.api;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.model.Product;
 import com.google.gson.Gson;
@@ -15,15 +17,19 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
 
     private StringBuffer buffer = new StringBuffer();
     private ProductCallbackInterface productcallback;
+    private Context context;
 
-    public FetchHttpConnection setCallBack(ProductCallbackInterface callBack){
+    public FetchHttpConnection setCallBack(ProductCallbackInterface callBack, Context context){
         this.productcallback = callBack;
+        this.context = context;
+
         return this;
     }
 
@@ -57,11 +63,13 @@ public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
         super.onPostExecute(aVoid);
         Gson gson = new Gson();
         Type productType = new TypeToken<List<Product>>(){}.getType();
-        List<Product> products = gson.fromJson(buffer.toString(), productType);
+        ArrayList<Product> products = gson.fromJson(buffer.toString(), productType);
 
         if(products != null) {
             productcallback.
                     successCallback(products);
+//            ProductDatabase productDatabase = new ProductDatabase(context);
+//            productDatabase.insertData(products);
         }
         else productcallback.failedCallback("failed fetching data");
     }
