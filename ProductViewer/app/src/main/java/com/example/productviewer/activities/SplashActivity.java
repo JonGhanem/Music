@@ -1,24 +1,11 @@
 package com.example.productviewer.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.productviewer.R;
-import com.example.productviewer.interfaces.ProductCallbackInterface;
-import com.example.productviewer.api.FetchHttpConnection;
-import com.example.productviewer.api.FetchRetrofitConnection;
-import com.example.productviewer.model.Product;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.productviewer.App.COMMUNICATION_TYPE;
-import static com.example.productviewer.App.SHARED_PREFERENCE;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -26,7 +13,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         Thread myThread = new Thread() {
             @Override
             public void run() {
@@ -41,10 +27,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         };
-
-
         myThread.start();
-
 //        checkConnectionMethod();
     }
 
@@ -114,6 +97,4 @@ public class SplashActivity extends AppCompatActivity {
 //    private void displayToast(String messageToast) {
 //        Toast.makeText(SplashActivity.this, messageToast, Toast.LENGTH_SHORT).show();
 //    }
-
-
 }

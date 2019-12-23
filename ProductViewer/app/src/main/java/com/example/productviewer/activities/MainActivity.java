@@ -1,45 +1,26 @@
 package com.example.productviewer.activities;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.TaskStackBuilder;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.productviewer.App;
+import com.example.productviewer.Helper;
 import com.example.productviewer.R;
 import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.database.ProductDatabase;
-import com.example.productviewer.fragment.AllProductsFragment;
 import com.example.productviewer.fragment.ProductDetailsFragment;
 import com.example.productviewer.interfaces.DatabaseFetching;
 import com.example.productviewer.interfaces.FragmentCommunicatorInterface;
@@ -48,17 +29,14 @@ import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.SQLData;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.productviewer.App.COMMUNICATION_TYPE;
-import static com.example.productviewer.App.SHARED_PREFERENCE;
+import static com.example.productviewer.Constant.COMMUNICATION_TYPE;
+import static com.example.productviewer.Constant.SHARED_PREFERENCE;
 
 public class MainActivity extends AppCompatActivity implements SelectedItemIterface {
 
@@ -71,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     private AppBarConfiguration mAppBarConfiguration;
     private List<Product> mProductList;
     ProductDatabase productDatabase = new ProductDatabase(this);
+    Helper helper = new Helper();
 
 
 
@@ -82,15 +61,12 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         setSupportActionBar(toolbar);
         Log.d("check", "onCreate: ");
 
-        if(isNetworkAvailable()){
+        if(helper.isNetworkAvailable(this) && !helper.checkIfDbExists(this)){
             checkConnectionMethod();
         }
-        else
-        {
+        else {
           getData();
         }
-
-
         setupNavController();
     }
 
@@ -132,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 
         } else {
             saveData("retrofit");
-            Toast.makeText(this, "first time", Toast.LENGTH_SHORT).show();
+            displayToast("First Time");
         }
     }
 
@@ -179,10 +155,9 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 
     private void updateAllProductFragment(List<Product> productList) {
 
-//        productDatabase.insertData(productList);
-
-        
-        productDatabase.insertData(productList);
+        if(!helper.checkIfDbExists(this)){
+            productDatabase.insertData(productList);
+        }
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         FragmentCommunicatorInterface fragmentCommunicator = (FragmentCommunicatorInterface) navHostFragment.getChildFragmentManager().getFragments().get(0);
@@ -205,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         item.setChecked(true);
     }
 
-    public void saveData(String s) {
+    private void saveData(String s) {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(COMMUNICATION_TYPE, s);
@@ -252,13 +227,4 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             }
         });
     }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
 }

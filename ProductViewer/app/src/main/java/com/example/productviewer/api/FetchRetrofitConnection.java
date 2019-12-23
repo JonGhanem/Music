@@ -34,7 +34,7 @@ public class FetchRetrofitConnection {
 
         call.enqueue(new Callback<List<Product>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Product>> call,@NonNull Response<List<Product>> response) {
+            public void onResponse(@NonNull Call<List<Product>> call, @NonNull Response<List<Product>> response) {
 
 
                 List<Product> productList = response.body();
@@ -44,18 +44,14 @@ public class FetchRetrofitConnection {
                     Log.d("ay7aga", "onResponse: ");
 //                    ProductDatabase productDatabase = new ProductDatabase(context);
 //                    productDatabase.insertData(productList);
-
-
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Product>> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
                 Log.d("ay7aga", "onFailure: ");
                 productcallback.failedCallback(t.getLocalizedMessage());
             }
         });
-
     }
-
 }

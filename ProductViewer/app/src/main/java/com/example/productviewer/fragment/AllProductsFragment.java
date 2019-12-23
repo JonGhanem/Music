@@ -1,6 +1,8 @@
 package com.example.productviewer.fragment;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.productviewer.Helper;
 import com.example.productviewer.R;
 import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
@@ -38,6 +41,8 @@ public class AllProductsFragment extends Fragment implements FragmentCommunicato
     ProgressBar progressBar;
     @BindView(R.id.loading)
     TextView loading;
+    Helper helper = new Helper();
+
 
     public AllProductsFragment() {
         // Required empty public constructor
@@ -55,20 +60,26 @@ public class AllProductsFragment extends Fragment implements FragmentCommunicato
         ButterKnife.bind(this, view);
         Log.d("check", "onViewCreated: ");
 
-        ((MainActivity) Objects.requireNonNull(getActivity())).passProductItem(new FragmentCommunicatorInterface() {
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .passProductItem(new FragmentCommunicatorInterface() {
             @Override
             public void passProductList(List<Product> productList) {
 
                 //ADAPTER
                 ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
                 //intialize SelectedItems for the adapter
-                if(getActivity() instanceof SelectedItemIterface){
+                if(getActivity() instanceof SelectedItemIterface) {
                     productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
                 }
                 recyclerView.setAdapter(productsAdapter);
-
             }
         });
+
+        if(helper.isNetworkAvailable(getContext())){
+            loading.setText("Parsing JSON feed...");
+        }else {
+            loading.setText("Reading from internal storage...");
+        }
     }
 
     @Override

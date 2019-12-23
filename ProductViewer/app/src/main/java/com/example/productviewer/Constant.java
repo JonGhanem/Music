@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 @SuppressLint("Registered")
-public class App extends Application {
+public class Constant extends Application {
 
     public static final String SHARED_PREFERENCE = "shared_preference";
     public static final String COMMUNICATION_TYPE = "communication_type";

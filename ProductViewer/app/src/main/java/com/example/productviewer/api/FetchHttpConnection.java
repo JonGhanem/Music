@@ -3,13 +3,10 @@ package com.example.productviewer.api;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,20 +17,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
+public class FetchHttpConnection extends AsyncTask<Void, Void, Void> {
 
     private StringBuffer buffer = new StringBuffer();
     private ProductCallbackInterface productcallback;
     private Context context;
 
-    public FetchHttpConnection setCallBack(ProductCallbackInterface callBack, Context context){
+    public FetchHttpConnection setCallBack(ProductCallbackInterface callBack, Context context) {
         this.productcallback = callBack;
         this.context = context;
 
         return this;
     }
-
-
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -62,15 +57,13 @@ public class FetchHttpConnection extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         Gson gson = new Gson();
-        Type productType = new TypeToken<List<Product>>(){}.getType();
+        Type productType = new TypeToken<List<Product>>() {
+        }.getType();
         ArrayList<Product> products = gson.fromJson(buffer.toString(), productType);
 
-        if(products != null) {
+        if (products != null) {
             productcallback.
                     successCallback(products);
-//            ProductDatabase productDatabase = new ProductDatabase(context);
-//            productDatabase.insertData(products);
-        }
-        else productcallback.failedCallback("failed fetching data");
+        } else productcallback.failedCallback("failed fetching data");
     }
 }
