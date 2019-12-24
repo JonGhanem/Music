@@ -2,7 +2,6 @@ package com.example.productviewer.fragment;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productviewer.Helper;
 import com.example.productviewer.R;
-import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.adapter.ProductsAdapter;
-import com.example.productviewer.interfaces.FragmentCommunicatorInterface;
 import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AllProductsFragment extends Fragment implements FragmentCommunicatorInterface{
+public class AllProductsFragment extends Fragment {
 
     @BindView(R.id.all_products_recyclerview)
     RecyclerView recyclerView;
@@ -43,6 +40,9 @@ public class AllProductsFragment extends Fragment implements FragmentCommunicato
     TextView loading;
     Helper helper = new Helper();
 
+    List<Product> productList = new ArrayList<>();
+
+    private ProgressDialog dialog;
 
     public AllProductsFragment() {
         // Required empty public constructor
@@ -52,34 +52,31 @@ public class AllProductsFragment extends Fragment implements FragmentCommunicato
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_all_products,null);
+        return inflater.inflate(R.layout.fragment_all_products, null);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         Log.d("check", "onViewCreated: ");
+        dialog = new ProgressDialog(getActivity());
 
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .passProductItem(new FragmentCommunicatorInterface() {
-            @Override
-            public void passProductList(List<Product> productList) {
-
-                //ADAPTER
-                ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
-                //intialize SelectedItems for the adapter
-                if(getActivity() instanceof SelectedItemIterface) {
-                    productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
-                }
-                recyclerView.setAdapter(productsAdapter);
-            }
-        });
-
-        if(helper.isNetworkAvailable(getContext())){
-            loading.setText("Parsing JSON feed...");
-        }else {
-            loading.setText("Reading from internal storage...");
+        if (getArguments() != null) {
+            productList = getArguments().getParcelableArrayList("selected item");
         }
+        if (productList == null || productList.isEmpty()){
+            dialog.show();
+        }
+
+        //ADAPTER
+        ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+        //intialize SelectedItems for the adapter
+        if (getActivity() instanceof SelectedItemIterface) {
+            productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
+        }
+        recyclerView.setAdapter(productsAdapter);
+        progressBar.setVisibility(View.INVISIBLE);
+        loading.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -88,15 +85,20 @@ public class AllProductsFragment extends Fragment implements FragmentCommunicato
         return "All Products";
     }
 
-    @Override
-    public void passProductList(List<Product> productList) {
+
+    public void updateData(List<Product> products){
+        this.productList = products;
+        Log.d("allproduct", "updateData: "+products.get(0).getProduct().getName());
+
+        //ADAPTER
         ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
         //intialize SelectedItems for the adapter
-        if(getActivity() instanceof SelectedItemIterface){
+        if (getActivity() instanceof SelectedItemIterface) {
             productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
         }
         recyclerView.setAdapter(productsAdapter);
         progressBar.setVisibility(View.INVISIBLE);
         loading.setVisibility(View.INVISIBLE);
+        dialog.dismiss();
     }
 }

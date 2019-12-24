@@ -7,16 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.productviewer.R;
-import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

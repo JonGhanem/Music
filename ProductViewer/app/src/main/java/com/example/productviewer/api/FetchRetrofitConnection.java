@@ -41,7 +41,7 @@ public class FetchRetrofitConnection {
                 if (productList != null) {
 
                     productcallback.successCallback((ArrayList<Product>) productList);
-                    Log.d("ay7aga", "onResponse: ");
+                    Log.d("check", "onResponse: ");
 //                    ProductDatabase productDatabase = new ProductDatabase(context);
 //                    productDatabase.insertData(productList);
                 }
@@ -49,7 +49,7 @@ public class FetchRetrofitConnection {
 
             @Override
             public void onFailure(@NonNull Call<List<Product>> call, @NonNull Throwable t) {
-                Log.d("ay7aga", "onFailure: ");
+                Log.d("check", "onFailure: ");
                 productcallback.failedCallback(t.getLocalizedMessage());
             }
         });

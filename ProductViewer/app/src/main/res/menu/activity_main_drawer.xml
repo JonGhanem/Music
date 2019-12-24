@@ -6,49 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_all_products"
-
             android:title="@string/menu_all_products" />
 
         <item
             android:id="@+id/nav_most_cheapest_products"
-
             android:title="@string/menu_most_cheapest_products" />
 
         <item
             android:id="@+id/nav_most_expensive_products"
-
             android:title="@string/menu_most_expensive_product" />
-
     </group>
-
-<!--        <item android:title="Communicate">-->
-<!--        <menu>-->
-<!--            <item-->
-<!--                android:id="@+id/nav_http"-->
-<!--                android:onClick="httpRetrieve"-->
-<!--                android:title="@string/menu_http" />-->
-<!--            <item-->
-<!--                android:id="@+id/nav_retrofit"-->
-<!--                android:onClick="retrofitRetrieve"-->
-<!--                android:title="@string/menu_retrofit" />-->
-<!--        </menu>-->
-<!--    </item>-->
-
-
-<!--    <item android:title="Communicate">-->
-<!--    <menu>-->
-<!--        <item-->
-<!--            android:id="@+id/nav_share"-->
-<!--            android:icon="@drawable/ic_menu_share"-->
-<!--            android:title="@string/menu_share" />-->
-<!--        <item-->
-<!--            android:id="@+id/nav_send"-->
-<!--            android:icon="@drawable/ic_menu_send"-->
-<!--            android:title="@string/menu_send" />-->
-<!--    </menu>-->
-<!--</item>-->
-<!--    -->
-
-<!--                    -->
 
 </menu>
