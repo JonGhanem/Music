@@ -1,4 +1,4 @@
-package com.example.productviewer;
+package com.example.productviewer.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 import java.io.File;
 
-public class Helper {
+public class HelperClass {
 
 
     public boolean isNetworkAvailable(Context context) {

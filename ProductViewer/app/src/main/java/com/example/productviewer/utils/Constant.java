@@ -1,4 +1,4 @@
-package com.example.productviewer;
+package com.example.productviewer.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -26,7 +26,7 @@ public class Constant extends Application {
     public static final String CREATE_TABLE = "create table " + TABLE_NAME + "" +
             " ( " + COL_1 +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_2 + " TEXT, " +
-            COL_3 + " TEXT, " +
+            COL_3 + " NUMERIC, " +
             COL_4 + " TEXT, " +
             COL_5 + " TEXT )" ;
 

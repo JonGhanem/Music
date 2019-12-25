@@ -11,7 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.productviewer.Constant;
+import com.example.productviewer.utils.Constant;
 import com.example.productviewer.interfaces.DatabaseFetching;
 import com.example.productviewer.model.Product;
 
@@ -106,7 +106,7 @@ public class ProductDatabase extends SQLiteOpenHelper {
                         Product.ProductBean productBean = new Product.ProductBean();
 
                         productBean.setName(cursor.getString(cursor.getColumnIndex(Constant.COL_2)));
-                        productBean.setPrice(cursor.getString(cursor.getColumnIndex(Constant.COL_3)));
+                        productBean.setPrice(cursor.getDouble(cursor.getColumnIndex(Constant.COL_3)));
                         productBean.setDescription(cursor.getString(cursor.getColumnIndex(Constant.COL_4)));
                         productBean.setImageUrl(cursor.getString(cursor.getColumnIndex(Constant.COL_5)));
 

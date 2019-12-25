@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.productviewer.Helper;
+import com.example.productviewer.utils.HelperClass;
 import com.example.productviewer.R;
 import com.example.productviewer.adapter.ProductsAdapter;
 import com.example.productviewer.interfaces.SelectedItemIterface;
@@ -34,15 +34,13 @@ public class AllProductsFragment extends Fragment {
 
     @BindView(R.id.all_products_recyclerview)
     RecyclerView recyclerView;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    @BindView(R.id.loading)
-    TextView loading;
-    Helper helper = new Helper();
 
-    List<Product> productList = new ArrayList<>();
+    private HelperClass helper = new HelperClass();
+
+    private List<Product> productList = new ArrayList<>();
 
     private ProgressDialog dialog;
+    private String fragmentName;
 
     public AllProductsFragment() {
         // Required empty public constructor
@@ -53,21 +51,30 @@ public class AllProductsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_all_products, null);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        Log.d("check", "onViewCreated: ");
+        //show name of fragment
+        getActivity().setTitle("All Products");
+        Log.d("check", "onViewCreated: allproducts");
         dialog = new ProgressDialog(getActivity());
-
+        if(helper.isNetworkAvailable(getActivity())){
+            dialog.setTitle("Parsing JSON feed...");
+        }else{
+            dialog.setTitle("Reading from internal storage...");
+        }
         if (getArguments() != null) {
             productList = getArguments().getParcelableArrayList("selected item");
+            Log.d("ProductFrsgmrnt", "onViewCreated: " + productList.get(0).getProduct().getName());
+            fragmentName = getArguments().getString("fragmentName");
         }
         if (productList == null || productList.isEmpty()){
             dialog.show();
         }
-
+        getActivity().setTitle(fragmentName);
         //ADAPTER
         ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
         //intialize SelectedItems for the adapter
@@ -75,8 +82,7 @@ public class AllProductsFragment extends Fragment {
             productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
         }
         recyclerView.setAdapter(productsAdapter);
-        progressBar.setVisibility(View.INVISIBLE);
-        loading.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -87,9 +93,9 @@ public class AllProductsFragment extends Fragment {
 
 
     public void updateData(List<Product> products){
+        //show name of fragment
+        getActivity().setTitle("All Products");
         this.productList = products;
-        Log.d("allproduct", "updateData: "+products.get(0).getProduct().getName());
-
         //ADAPTER
         ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
         //intialize SelectedItems for the adapter
@@ -97,8 +103,8 @@ public class AllProductsFragment extends Fragment {
             productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
         }
         recyclerView.setAdapter(productsAdapter);
-        progressBar.setVisibility(View.INVISIBLE);
-        loading.setVisibility(View.INVISIBLE);
+        Log.d("allproduct", "onNavigationItemSelected: "+productList.get(0).getProduct().getName());
         dialog.dismiss();
+
     }
 }

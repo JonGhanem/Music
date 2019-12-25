@@ -1,7 +1,7 @@
 package com.example.productviewer.activities;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -10,24 +10,19 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.productviewer.Helper;
+import com.example.productviewer.utils.HelperClass;
 import com.example.productviewer.R;
 import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.fragment.AllProductsFragment;
-import com.example.productviewer.fragment.MostCheapestPrductsFragment;
-import com.example.productviewer.fragment.MostExpensiveProductsFragment;
 import com.example.productviewer.fragment.ProductDetailsFragment;
 import com.example.productviewer.interfaces.DatabaseFetching;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
@@ -36,13 +31,15 @@ import com.example.productviewer.model.Product;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.productviewer.Constant.COMMUNICATION_TYPE;
-import static com.example.productviewer.Constant.SHARED_PREFERENCE;
+import static com.example.productviewer.utils.Constant.COMMUNICATION_TYPE;
+import static com.example.productviewer.utils.Constant.SHARED_PREFERENCE;
 
 public class MainActivity extends AppCompatActivity implements SelectedItemIterface, NavigationView.OnNavigationItemSelectedListener {
 
@@ -54,9 +51,8 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     Toolbar toolbar;
     private List<Product> mProductList;
     private ProductDatabase productDatabase = new ProductDatabase(this);
-    private Helper helper = new Helper();
+    private HelperClass helper = new HelperClass();
     private Bundle bundle = new Bundle();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         if (!helper.checkIfDbExists(this)) {
             productDatabase.insertData(mProductList);
         }
-        Log.d("allproduct", "updateAllProductFragment: "+ mProductList.get(0).getProduct().getName());
         AllProductsFragment allProductsFragment = (AllProductsFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         allProductsFragment.updateData(mProductList);
     }
@@ -191,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public void onItemClickListener(Product product) {
 
@@ -212,46 +206,51 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             @Override
             public void onDeliverAllProduct(List<Product> productList) {
                 mProductList = productList;
-                Log.d("database", "onDeliverAllProduct: "+ mProductList.get(0).getProduct().getName());
+//                Log.d("database", "onDeliverAllProduct: "+ mProductList.get(0).getProduct().getName());
                 updateAllProductFragment(productList);
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        ArrayList<Product> productSorted = new ArrayList<>(mProductList);
+//        original = (ArrayList<Product>) mProductList;
 
         switch (item.getItemId()) {
             case R.id.nav_all_products:
-                bundle.putParcelableArrayList("selected item", (ArrayList<? extends Parcelable>) mProductList);
-                AllProductsFragment allProductsFragment = new AllProductsFragment();
-                allProductsFragment.setArguments(bundle);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.nav_host_fragment, allProductsFragment).commit();
+                changeFragment("All products", new ArrayList<>(mProductList));
                 break;
 
             case R.id.nav_most_cheapest_products:
-                bundle.putParcelableArrayList("selected item", (ArrayList<? extends Parcelable>) mProductList);
-                MostCheapestPrductsFragment mostCheapestPrductsFragment = new MostCheapestPrductsFragment();
-                mostCheapestPrductsFragment.setArguments(bundle);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.nav_host_fragment, mostCheapestPrductsFragment).commit();
+                Collections.sort(productSorted,
+                        Comparator.comparing(Product::getProduct,
+                                Comparator.comparingDouble(Product.ProductBean::getPrice)));
+                changeFragment("the cheapest products", productSorted);
                 break;
 
             case R.id.nav_most_expensive_products:
-                bundle.putParcelableArrayList("selected item", (ArrayList<? extends Parcelable>) mProductList);
-                MostExpensiveProductsFragment mostExpensiveProductsFragment = new MostExpensiveProductsFragment();
-                mostExpensiveProductsFragment.setArguments(bundle);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.nav_host_fragment, mostExpensiveProductsFragment).commit();
+                Collections.sort(productSorted,
+                        Comparator.comparing(Product::getProduct,
+                                Comparator.comparingDouble(Product.ProductBean::getPrice).reversed()));
+                changeFragment("The most expensive products", productSorted);
                 break;
 
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changeFragment(String fragmentName, ArrayList<Product> productArrayList) {
+        AllProductsFragment allProductsFragment = new AllProductsFragment();
+        bundle.putParcelableArrayList("selected item", new ArrayList<>(productArrayList) );
+        bundle.putString("fragmentName", fragmentName);
+        allProductsFragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.nav_host_fragment, allProductsFragment)
+                .commit();
     }
 }

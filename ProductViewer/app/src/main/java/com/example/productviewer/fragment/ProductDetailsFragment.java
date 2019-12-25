@@ -2,36 +2,20 @@ package com.example.productviewer.fragment;
 
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import com.example.productviewer.R;
 import com.example.productviewer.model.Product;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.squareup.picasso.Picasso;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -40,26 +24,19 @@ import butterknife.ButterKnife;
  */
 public class ProductDetailsFragment extends Fragment {
 
-    private Product mProduct;
-
-
     @BindView(R.id.image_product_details)
     ImageView productImage;
-
     @BindView(R.id.name_product_details)
     TextView productName;
-
     @BindView(R.id.price_product_details)
     TextView productPrice;
-
     @BindView(R.id.description_product_details)
     TextView productDescription;
+    private Product mProduct;
 
     public ProductDetailsFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +48,11 @@ public class ProductDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
+        //show name of fragment
+        getActivity().setTitle("Product's Details");
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (this.getArguments() != null) {
             mProduct = this.getArguments().getParcelable("selected item");
         }

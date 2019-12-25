@@ -52,7 +52,7 @@ public class Product implements Parcelable {
         private String id;
         private String name;
         private String description;
-        private String price;
+        private double price;
         @SerializedName("unit_price")
         private Object unitPrice;
         @SerializedName("product_type_id")
@@ -68,7 +68,7 @@ public class Product implements Parcelable {
             id = in.readString();
             name = in.readString();
             description = in.readString();
-            price = in.readString();
+            price = Double.parseDouble(in.readString());
             imageUrl = in.readString();
         }
 
@@ -113,11 +113,11 @@ public class Product implements Parcelable {
             this.description = description;
         }
 
-        public String getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(String price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -171,7 +171,7 @@ public class Product implements Parcelable {
             dest.writeString(id);
             dest.writeString(name);
             dest.writeString(description);
-            dest.writeString(price);
+            dest.writeDouble(price);
             dest.writeString(imageUrl);
         }
     }
