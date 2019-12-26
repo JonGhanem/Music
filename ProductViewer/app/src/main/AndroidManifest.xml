@@ -26,7 +26,12 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <provider
+            android:name=".database.ContentProviderDb"
+            android:authorities="com.example.productviewer.provider"
+            android:exported="true" />
     </application>
 
 </manifest>

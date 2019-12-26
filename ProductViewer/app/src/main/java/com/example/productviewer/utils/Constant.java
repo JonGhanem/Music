@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 
 @SuppressLint("Registered")
 public class Constant extends Application {
@@ -20,7 +21,6 @@ public class Constant extends Application {
     public static final String COL_3 = "PRODUCT_PRICE";
     public static final String COL_4 = "PRODUCT_DESCRIPTION";
     public static final String COL_5 = "PRODUCT_IMAGE_URL";
-    public static final String COL_6 = "PRODUCT_ID";
 
 // SQL Statments
     public static final String CREATE_TABLE = "create table " + TABLE_NAME + "" +
@@ -33,5 +33,8 @@ public class Constant extends Application {
     public static final String DROP_TABLE = " DROP TABLE IF EXISTS " + TABLE_NAME;
 
     public static final String SELECT_ALL_PRODUCTS = " SELECT * FROM " + TABLE_NAME;
+
+
+
 
 }

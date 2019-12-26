@@ -1,22 +1,32 @@
 package com.example.productviewer.activities;
 
+import android.content.ContentProvider;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
+import com.example.productviewer.database.ContentProviderDb;
+import com.example.productviewer.utils.Constant;
 import com.example.productviewer.utils.HelperClass;
 import com.example.productviewer.R;
 import com.example.productviewer.api.FetchHttpConnection;
@@ -70,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             getData();
         }
 
+//        QueryGet();
         if (savedInstanceState == null) {
 //            Log.d("database", "onCreate: "+mProductList.get(0).getProduct().getName());
             bundle.putParcelableArrayList("selected item", (ArrayList<? extends Parcelable>) mProductList);
@@ -113,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             @Override
             public void successCallback(ArrayList<Product> productList) {
                 mProductList = productList;
+
                 Log.d("check", "successCallback: ");
                 displayToast("HTTP");
 
@@ -208,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 mProductList = productList;
 //                Log.d("database", "onDeliverAllProduct: "+ mProductList.get(0).getProduct().getName());
                 updateAllProductFragment(productList);
+                Add(productList);
+                QueryGet();
             }
         });
     }
@@ -217,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         ArrayList<Product> productSorted = new ArrayList<>(mProductList);
-//        original = (ArrayList<Product>) mProductList;
+
 
         switch (item.getItemId()) {
             case R.id.nav_all_products:
@@ -253,4 +267,56 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 .replace(R.id.nav_host_fragment, allProductsFragment)
                 .commit();
     }
-}
+    public void QueryGet() {
+        final List<Product> productListCursor = new ArrayList<>();
+        // define content provider url to read from
+        Uri students = Uri.parse(ContentProviderDb.URL);
+        // get data ordered by name
+        Cursor c = getContentResolver().query(students, null, null, null, ContentProviderDb.NAME);
+// move through all items
+        if (c.moveToFirst()) {
+            do {
+                Product.ProductBean productBean = new Product.ProductBean();
+                productBean.setName(c.getString(c.getColumnIndex(Constant.COL_2)));
+                productBean.setPrice(c.getDouble(c.getColumnIndex(Constant.COL_3)));
+                productBean.setDescription(c.getString(c.getColumnIndex(Constant.COL_4)));
+                productBean.setImageUrl(c.getString(c.getColumnIndex(Constant.COL_5)));
+
+                Product mproduct = new Product();
+                mproduct.setProduct(productBean);
+
+                productListCursor.add(mproduct);
+            } while (c.moveToNext());
+
+            Log.d("getdata", "QueryGet: "+ productListCursor.get(0).getProduct().getName());
+        }
+    }
+
+    public void Add(List<Product> list) {
+        // Add a new student record
+        ContentValues values = new ContentValues();
+// insert value
+        for (int i = 0; i <list.size() ; i++) {
+            values.put(ContentProviderDb.NAME,
+                    list.get(i).getProduct().getName());
+
+            values.put(ContentProviderDb.PRICE,
+                    list.get(i).getProduct().getPrice());
+
+            values.put(ContentProviderDb.DESCRIPTION,
+                    list.get(i).getProduct().getDescription());
+
+            values.put(ContentProviderDb.IMAGE,
+                    list.get(i).getProduct().getImageUrl());
+        }
+
+
+
+// define the play to insert the values in
+        Uri uri = getContentResolver().insert(
+                ContentProviderDb.CONTENT_URI, values);
+// display messages
+        Toast.makeText(getBaseContext(),
+                uri.toString(), Toast.LENGTH_LONG).show();
+    }
+   }
