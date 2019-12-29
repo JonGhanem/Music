@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FetchRetrofitConnection {
 
     public void runFetchRetrofitConnection(final ProductCallbackInterface productcallback, final Context context) {
-
+        Log.d("check", "runFetchRetrofitConnection: ");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.nweave.com")
                 .addConverterFactory(GsonConverterFactory.create())

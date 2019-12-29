@@ -34,8 +34,8 @@ public class ProductDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL(Constant.DROP_TABLE);
-        onCreate(db);
+//        db.execSQL(Constant.DROP_TABLE);
+//        onCreate(db);
     }
 
     public void insertData(List<Product> product) {
@@ -48,7 +48,7 @@ public class ProductDatabase extends SQLiteOpenHelper {
             contentValues.put(Constant.COL_3, product.get(i).getProduct().getPrice());
             contentValues.put(Constant.COL_4, product.get(i).getProduct().getDescription());
             contentValues.put(Constant.COL_5, product.get(i).getProduct().getImageUrl());
-//            contentValues.put(Constant.COL_6, product.get(i).getProduct().getId());
+//            contentValues.put(Constant.COL_6, PRODUCT_TABLE.get(i).getProduct().getId());
             Log.d("111", "insertData: " + contentValues.get(Constant.COL_2) + "\n");
             db.insert(Constant.TABLE_NAME, null, contentValues);
         }
@@ -118,14 +118,16 @@ public class ProductDatabase extends SQLiteOpenHelper {
                     } while (cursor.moveToNext());
 
                 }
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        fetching.onDeliverAllProduct(productList);
-                    }
-                });
+
             }
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    fetching.onDeliverAllProduct(productList);
+                }
+            });
         }
     }
 }

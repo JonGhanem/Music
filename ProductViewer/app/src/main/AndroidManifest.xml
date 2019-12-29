@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -29,9 +30,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <provider
-            android:name=".database.ContentProviderDb"
-            android:authorities="com.example.productviewer.provider"
-            android:exported="true" />
+            android:authorities="com.example.productviewer.database.ProductProvider"
+            android:name=".database.ProductProvider"
+            android:exported="true"
+            android:enabled="true"/>
     </application>
 
 </manifest>
