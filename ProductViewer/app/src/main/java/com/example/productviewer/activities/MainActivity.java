@@ -1,12 +1,12 @@
 package com.example.productviewer.activities;
 
+import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +21,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.productviewer.database.ProductProvider;
-import com.example.productviewer.utils.Constant;
 import com.example.productviewer.utils.HelperClass;
 import com.example.productviewer.R;
 import com.example.productviewer.api.FetchHttpConnection;
@@ -29,7 +28,6 @@ import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.fragment.AllProductsFragment;
 import com.example.productviewer.fragment.ProductDetailsFragment;
-import com.example.productviewer.interfaces.DatabaseFetching;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
@@ -58,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     private ProductDatabase productDatabase = new ProductDatabase(this);
     private HelperClass helper = new HelperClass();
     private Bundle bundle = new Bundle();
+    private AllProductsFragment allProductsFragment;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,35 +65,28 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        Log.d("callchangefragment", "onCreate: ");
         navigationView.setNavigationItemSelectedListener(this);
         showDrawerToggle();
-
+        allProductsFragment = new AllProductsFragment();
 //        if (helper.isNetworkAvailable(this) && !helper.checkIfDbExists(this)) {
 //            checkConnectionMethod();
 //        } else {
-        getData();
 //        }
-
-        if (savedInstanceState == null) {
-            bundle.putParcelableArrayList("selected item", (ArrayList<? extends Parcelable>) mProductList);
-            AllProductsFragment allProductsFragment = new AllProductsFragment();
-            allProductsFragment.setArguments(bundle);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment, new AllProductsFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_all_products);
+        if(savedInstanceState == null){
+            getData();
         }
     }
 
     private void showDrawerToggle() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.nav_app_bar_open_drawer_description, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
     }
 
-
     private void checkConnectionMethod() {
+        Log.d("callchangefragment", "checkConnectionMethod: ");
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCE, MODE_PRIVATE);
         String sharedValue = sharedPreferences.getString(COMMUNICATION_TYPE, "");
 
@@ -118,11 +111,12 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             public void successCallback(ArrayList<Product> productList) {
                 mProductList = productList;
 
-                Log.d("check", "successCallback: ");
+                Log.d("callchangefragment", "http: ");
                 displayToast("HTTP");
-                productDatabase.insertData(productList);
-                updateAllProductFragment(mProductList);
-
+//                productDatabase.insertData(productList);
+                addProvider(productList);
+                changeFragment("all product", (ArrayList<Product>) productList);
+                navigationView.setCheckedItem(R.id.nav_all_products);
             }
 
             @Override
@@ -139,10 +133,12 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
             @Override
             public void successCallback(ArrayList<Product> productList) {
                 mProductList = productList;
+                Log.d("callchangefragment", "retrofit: ");
                 displayToast("Retrofit");
 //                productDatabase.insertData(productList);
                 addProvider(productList);
-                updateAllProductFragment(mProductList);
+                changeFragment("all product", (ArrayList<Product>) productList);
+                navigationView.setCheckedItem(R.id.nav_all_products);
             }
 
             @Override
@@ -154,16 +150,16 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         }, this);
     }
 
-    private void updateAllProductFragment(List<Product> productList) {
-        mProductList = productList;
-//        if (!helper.checkIfDbExists(this)) {
-//            productDatabase.insertData(mProductList);
+//    private void updateAllProductFragment(List<Product> productList) {
+////        mProductList = productList;
+////        if (!helper.checkIfDbExists(this)) {
+////            productDatabase.insertData(mProductList);
+////        }
+//        AllProductsFragment allProductsFragment = (AllProductsFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+//        if (allProductsFragment != null) {
+//            allProductsFragment.updateData(productList);
 //        }
-        AllProductsFragment allProductsFragment = (AllProductsFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        if (allProductsFragment != null) {
-            allProductsFragment.updateData(mProductList);
-        }
-    }
+//    }
 
     private void displayToast(String messageToast) {
         Toast.makeText(this, messageToast, Toast.LENGTH_SHORT).show();
@@ -223,22 +219,24 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 //                updateAllProductFragment(productList);
 //            }
 //        });
+        Log.d("callchangefragment", "getData: ");
 
-        List<Product> productList = QueryGet();
-                    mProductList = productList;
-            if (productList == null || productList.isEmpty()) {
-                if (helper.isNetworkAvailable(this)) {
-                    checkConnectionMethod();
-                } else {
-                    // No internet connection in first time to launch the app
-                }
-            } else {
-                updateAllProductFragment(productList);
+        List<Product> productList = getQuery();
+        mProductList = productList;
+        if (productList == null || productList.isEmpty()) {
+            if (helper.isNetworkAvailable(this)) {
+                checkConnectionMethod();
             }
-
+            else {
+                displayToast("NO INTERNET CONNECTION");
+            }
+        } else if(productList != null || !productList.isEmpty()){
+            Log.d("callchangefragment", "database: ");
+            changeFragment("all product", (ArrayList<Product>) productList);
+            navigationView.setCheckedItem(R.id.nav_all_products);
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -247,30 +245,38 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 
         switch (item.getItemId()) {
             case R.id.nav_all_products:
-                changeFragment("All products", new ArrayList<>(mProductList));
+                allProductsFragment.updateData(mProductList);
+                toolbar.setTitle("all products");
                 break;
 
             case R.id.nav_most_cheapest_products:
-                Collections.sort(productSorted,
-                        Comparator.comparing(Product::getProduct,
-                                Comparator.comparingDouble(Product.ProductBean::getPrice)));
-                changeFragment("the cheapest products", productSorted);
+//                Collections.sort(productSorted,
+//                        Comparator.comparing(Product::getProduct,
+//                                Comparator.comparingDouble(Product.ProductBean::getPrice)));
+//                changeFragment("The most expensive products", productSorted);
+                Collections.sort(productSorted, (p1, p2) -> Double.compare(p1.getProduct().getPrice(), p2.getProduct().getPrice()));
+                allProductsFragment.updateData(productSorted);
+                toolbar.setTitle("cheapest products");
+
+
                 break;
 
             case R.id.nav_most_expensive_products:
-                Collections.sort(productSorted,
-                        Comparator.comparing(Product::getProduct,
-                                Comparator.comparingDouble(Product.ProductBean::getPrice).reversed()));
-                changeFragment("The most expensive products", productSorted);
+                Comparator<Product> comparator =
+                        (product, t1) -> Double.compare(product.getProduct().getPrice(), t1.getProduct().getPrice());
+                Collections.sort(productSorted, Collections.reverseOrder(comparator));
+                allProductsFragment.updateData(productSorted);
+                toolbar.setTitle("most expensive products");
                 break;
-
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void changeFragment(String fragmentName, ArrayList<Product> productArrayList) {
-        AllProductsFragment allProductsFragment = new AllProductsFragment();
+        Log.d("callchangefragment", "changeFragment: "+ fragmentName);
+        toolbar.setTitle(fragmentName);
         bundle.putParcelableArrayList("selected item", new ArrayList<>(productArrayList));
         bundle.putString("fragmentName", fragmentName);
         allProductsFragment.setArguments(bundle);
@@ -280,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 .commit();
     }
 
-    public  List<Product>  QueryGet() {
+    public List<Product> getQuery() {
         final List<Product> productListCursor = new ArrayList<>();
         // define content provider url to read from
         Uri products = Uri.parse(ProductProvider.URL);
@@ -301,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
                 productListCursor.add(mproduct);
             } while (c.moveToNext());
 
-            Log.d("getdata", "QueryGet: ");
+            Log.d("getdata", "getQuery: ");
         }
 
         return productListCursor;
@@ -310,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     public void addProvider(List<Product> list) {
         // Add a new student record
         ContentValues values = new ContentValues();
+        Uri uri;
         // insert value
         for (int i = 0; i < list.size(); i++) {
             values.put(ProductProvider.NAME,
@@ -323,11 +330,14 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 
             values.put(ProductProvider.IMAGE,
                     list.get(i).getProduct().getImageUrl());
+             uri = getContentResolver().insert(
+                    ProductProvider.CONTENT_URI, values);
         }
+        Log.d("callchangefragment", "Products count to write in content provider = " + list.size());
         // define the play to insert the values in
-        Uri uri = getContentResolver().insert(
-                ProductProvider.CONTENT_URI, values);
+
         // display messages
-        displayToast(uri.toString());
+//        displayToast(uri.toString());
     }
+
 }

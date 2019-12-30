@@ -41,6 +41,7 @@ public class AllProductsFragment extends Fragment {
 
     private ProgressDialog dialog;
     private String fragmentName;
+    private ProductsAdapter productsAdapter;
 
     public AllProductsFragment() {
         // Required empty public constructor
@@ -51,14 +52,12 @@ public class AllProductsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_all_products, null);
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        //show name of fragment
-        getActivity().setTitle("All Products");
+        getActivity().setTitle("all products");
         Log.d("check", "onViewCreated: allproducts");
         dialog = new ProgressDialog(getActivity());
         if(helper.isNetworkAvailable(getActivity())){
@@ -74,9 +73,10 @@ public class AllProductsFragment extends Fragment {
         if (productList == null || productList.isEmpty()){
             dialog.show();
         }
-        getActivity().setTitle(fragmentName);
+        Log.d("fragmentin", "onViewCreated: "+ fragmentName);
         //ADAPTER
-        ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+        Log.d("callchangefragment", "Products count = " + productList.size());
+        productsAdapter = new ProductsAdapter(productList, getActivity());
         //intialize SelectedItems for the adapter
         if (getActivity() instanceof SelectedItemIterface) {
             productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());
@@ -90,14 +90,12 @@ public class AllProductsFragment extends Fragment {
     public String toString() {
         return "All Products";
     }
-
-
     public void updateData(List<Product> products){
         //show name of fragment
-        getActivity().setTitle("All Products");
+//        getActivity().setTitle("All Products");
         this.productList = products;
         //ADAPTER
-        ProductsAdapter productsAdapter = new ProductsAdapter(productList, getActivity());
+        productsAdapter = new ProductsAdapter(productList, getActivity());
         //intialize SelectedItems for the adapter
         if (getActivity() instanceof SelectedItemIterface) {
             productsAdapter.setmSelectedItemIterface((SelectedItemIterface) getActivity());

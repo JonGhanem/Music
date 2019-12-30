@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.productviewer.R;
+import com.example.productviewer.activities.MainActivity;
 import com.example.productviewer.model.Product;
 import com.squareup.picasso.Picasso;
 import butterknife.BindView;
@@ -33,6 +36,7 @@ public class ProductDetailsFragment extends Fragment {
     @BindView(R.id.description_product_details)
     TextView productDescription;
     private Product mProduct;
+    Toolbar toolbar;
 
     public ProductDetailsFragment() {
         // Required empty public constructor
@@ -51,7 +55,17 @@ public class ProductDetailsFragment extends Fragment {
         //show name of fragment
         getActivity().setTitle("Product's Details");
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+//        Toolbar toolbar = view.findViewById(R.id.toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
 
         if (this.getArguments() != null) {
             mProduct = this.getArguments().getParcelable("selected item");
@@ -83,6 +97,8 @@ public class ProductDetailsFragment extends Fragment {
         productPrice.setText("price: "+"\n $  "+mProduct.getProduct().getPrice());
         productDescription.setText("Descriptions: "+"\n"+mProduct.getProduct().getDescription());
     }
+
+
 
 
 }
