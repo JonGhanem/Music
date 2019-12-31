@@ -68,7 +68,7 @@ public class Product implements Parcelable {
             id = in.readString();
             name = in.readString();
             description = in.readString();
-            price = Double.parseDouble(in.readString());
+            price = in.readDouble();
             imageUrl = in.readString();
         }
 

@@ -1,11 +1,10 @@
 package com.example.productviewer.activities;
 
-import android.app.FragmentManager;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,7 +25,6 @@ import com.example.productviewer.api.FetchHttpConnection;
 import com.example.productviewer.api.FetchRetrofitConnection;
 import com.example.productviewer.database.ProductDatabase;
 import com.example.productviewer.fragment.AllProductsFragment;
-import com.example.productviewer.fragment.ProductDetailsFragment;
 import com.example.productviewer.interfaces.ProductCallbackInterface;
 import com.example.productviewer.interfaces.SelectedItemIterface;
 import com.example.productviewer.model.Product;
@@ -73,16 +70,17 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 //            checkConnectionMethod();
 //        } else {
 //        }
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             getData();
         }
     }
 
     private void showDrawerToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.nav_app_bar_open_drawer_description, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+            toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                    R.string.nav_app_bar_open_drawer_description, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+
     }
 
     private void checkConnectionMethod() {
@@ -194,16 +192,21 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     @Override
     public void onItemClickListener(Product product) {
 
-        Log.d("item1", "onItemClickListener: " + product.getProduct().getName());
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("selected item", product);
-        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
-        productDetailsFragment.setArguments(bundle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.nav_host_fragment, productDetailsFragment)
-                .addToBackStack(null)
-                .commit();
+//        Log.d("item1", "onItemClickListener: " + product.getProduct().getName());
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("selected item", product);
+//        ProductDetailsFragment productDetailsFragment = new ProductDetailsFragment();
+//        productDetailsFragment.setArguments(bundle);
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .add(R.id.nav_host_fragment, productDetailsFragment)
+//                .addToBackStack(null)
+//                .commit();
+        Intent intent = new Intent(this, DetailsActivity.class);
+        Bundle extras = new Bundle();
+        extras.putParcelable("productItem", product);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private void getData() {
@@ -226,11 +229,10 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         if (productList == null || productList.isEmpty()) {
             if (helper.isNetworkAvailable(this)) {
                 checkConnectionMethod();
-            }
-            else {
+            } else {
                 displayToast("NO INTERNET CONNECTION");
             }
-        } else if(productList != null || !productList.isEmpty()){
+        } else if (productList != null || !productList.isEmpty()) {
             Log.d("callchangefragment", "database: ");
             changeFragment("all product", (ArrayList<Product>) productList);
             navigationView.setCheckedItem(R.id.nav_all_products);
@@ -275,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
     }
 
     private void changeFragment(String fragmentName, ArrayList<Product> productArrayList) {
-        Log.d("callchangefragment", "changeFragment: "+ fragmentName);
+        Log.d("callchangefragment", "changeFragment: " + fragmentName);
         toolbar.setTitle(fragmentName);
         bundle.putParcelableArrayList("selected item", new ArrayList<>(productArrayList));
         bundle.putString("fragmentName", fragmentName);
@@ -330,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
 
             values.put(ProductProvider.IMAGE,
                     list.get(i).getProduct().getImageUrl());
-             uri = getContentResolver().insert(
+            uri = getContentResolver().insert(
                     ProductProvider.CONTENT_URI, values);
         }
         Log.d("callchangefragment", "Products count to write in content provider = " + list.size());
@@ -339,5 +341,6 @@ public class MainActivity extends AppCompatActivity implements SelectedItemIterf
         // display messages
 //        displayToast(uri.toString());
     }
+
 
 }
