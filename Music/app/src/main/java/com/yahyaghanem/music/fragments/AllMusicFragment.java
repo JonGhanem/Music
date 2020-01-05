@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.yahyaghanem.music.R;
 import com.yahyaghanem.music.adapter.MusicAdapter;
+import com.yahyaghanem.music.interfaces.SelectedSongInterface;
 import com.yahyaghanem.music.model.SongsInfo;
 
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ public class AllMusicFragment extends Fragment {
 
     private MusicAdapter musicAdapter;
     private List<SongsInfo> songsInfos = new ArrayList<>();
-    private ProgressDialog dialog;
     @BindView(R.id.all_products_recyclerview)
     RecyclerView recyclerView;
 
@@ -51,16 +52,14 @@ public class AllMusicFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
 
-//        dialog = new ProgressDialog(getActivity());
-//        dialog.setTitle("Reading from internal storage...");
-//        if (songsInfos != null){
-//            dialog.dismiss();}
-
         songsInfos = getArguments().getParcelableArrayList("listofsongs");
         //ADAPTER
         Log.d("callfragment", "songs count = " + songsInfos.size());
 
-        musicAdapter = new MusicAdapter(songsInfos, getActivity());
+        musicAdapter = new MusicAdapter(songsInfos);
+        if (getActivity() instanceof SelectedSongInterface) {
+            musicAdapter.setmSelectedItemIterface((SelectedSongInterface) getActivity());
+        }
 
         recyclerView.setAdapter(musicAdapter);
     }

@@ -3,4 +3,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="music_title">music title</string>
+    <string name="music_artist">music artist</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.yahyaghanem.music.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yahyaghanem.music.R;
+import com.yahyaghanem.music.interfaces.SelectedSongInterface;
 import com.yahyaghanem.music.model.SongsInfo;
 
 import java.util.List;
@@ -17,11 +19,10 @@ import java.util.List;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
 
     private List<SongsInfo> songs;
-    private Context context;
+    private SelectedSongInterface mselectedSongInterface;
 
-    public MusicAdapter(List<SongsInfo> songList, Context context){
+    public MusicAdapter(List<SongsInfo> songList){
         this.songs = songList;
-        this.context = context;
     }
 
     @NonNull
@@ -33,6 +34,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
         return new ViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -40,6 +43,23 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
 
         holder.title.setText(info.getSongName());
         holder.artist.setText(info.getArtistName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("adapter", "onClick: ");
+                if (mselectedSongInterface != null) {
+                    if (position != RecyclerView.NO_POSITION) {
+                        Log.d("adapter", "onClick1: ");
+                        mselectedSongInterface.onItemClickListener(songs.get(position));
+                    }
+                }
+            }
+        });
+    }
+
+    public void setmSelectedItemIterface(SelectedSongInterface selectedSongInterface) {
+        mselectedSongInterface = selectedSongInterface;
     }
 
     @Override

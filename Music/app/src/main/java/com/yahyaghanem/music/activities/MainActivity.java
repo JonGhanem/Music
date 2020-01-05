@@ -1,5 +1,7 @@
 package com.yahyaghanem.music.activities;
 
+
+
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -18,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.yahyaghanem.music.R;
 import com.yahyaghanem.music.fragments.AllMusicFragment;
+import com.yahyaghanem.music.fragments.OnlineFragment;
+import com.yahyaghanem.music.fragments.PlayerFragment;
+import com.yahyaghanem.music.interfaces.SelectedSongInterface;
 import com.yahyaghanem.music.model.SongsInfo;
 import com.yahyaghanem.music.services.MusicService;
 
@@ -29,19 +34,18 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, SelectedSongInterface {
     //button objects
     private Button buttonStart;
     private Button buttonStop;
     private List<SongsInfo> songs = new ArrayList<>();
-    private AllMusicFragment allMusicFragment = new AllMusicFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setView();
-
     }
 
     private void setView() {
@@ -61,8 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //startService(new Intent(this, MusicService.class));
             getmusic();
         } else if (view == buttonStop) {
-            //stopping service
-            stopService(new Intent(this, MusicService.class));
+            OnlineFragment onlineFragment = new OnlineFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, onlineFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -128,13 +136,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showSongList(List<SongsInfo> songsInfoArrayList) {
-
+        AllMusicFragment allMusicFragment = new AllMusicFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("listofsongs", new ArrayList<>(songsInfoArrayList));
         allMusicFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, allMusicFragment)
+                .add(R.id.container, allMusicFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onItemClickListener(SongsInfo songsInfo) {
+        Log.d("onclick", "data back: "+songsInfo.getArtistName());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("selected song", songsInfo);
+        PlayerFragment playerFragment = new PlayerFragment();
+        playerFragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, playerFragment)
                 .addToBackStack(null)
                 .commit();
     }
