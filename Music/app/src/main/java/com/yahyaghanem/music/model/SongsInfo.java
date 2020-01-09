@@ -7,15 +7,19 @@ public class SongsInfo implements Parcelable {
     private String songName;
     private String artistName;
     private String songUrl;
+    private int image;
+
+
 
     public SongsInfo(){
 
     }
 
-    public SongsInfo(String songname, String artistname, String songUrl) {
+    public SongsInfo(String songname, String artistname, String songUrl, int image) {
         this.songName = songname;
         this.artistName = artistname;
         this.songUrl = songUrl;
+        this.image = image;
 
     }
 
@@ -59,6 +63,14 @@ public class SongsInfo implements Parcelable {
         this.songName = in.readString();
         this.artistName = in.readString();
         this.songUrl = in.readString();
+    }
+
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
     }
 
     public static final Parcelable.Creator<SongsInfo> CREATOR = new Parcelable.Creator<SongsInfo>() {

@@ -1,7 +1,6 @@
 package com.yahyaghanem.music.activities;
 
 
-
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import com.yahyaghanem.music.fragments.OnlineFragment;
 import com.yahyaghanem.music.fragments.PlayerFragment;
 import com.yahyaghanem.music.interfaces.SelectedSongInterface;
 import com.yahyaghanem.music.model.SongsInfo;
-import com.yahyaghanem.music.services.MusicService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +32,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, SelectedSongInterface {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, SelectedSongInterface{
     //button objects
     private Button buttonStart;
     private Button buttonStop;
@@ -89,11 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String name = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                     String artist = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = songCursor.getString(songCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    int image = songCursor.getInt(songCursor.getColumnIndex(MediaStore.Images.Media._ID));
 
-                    SongsInfo song = new SongsInfo(name,artist,url);
+
+                    SongsInfo song = new SongsInfo(name,artist,url, image);
                     songs.add(song);
                 } while(songCursor.moveToNext());
-                    Log.d("getmusictracks", "getmusic: "+ songs.get(0));
+                    Log.d("getmusictracks", "getmusic: "+ songs.get(0).getImage());
                     if(songs != null) {
                         showSongList(songs);
                     }
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemClickListener(SongsInfo songsInfo) {
         Log.d("onclick", "data back: "+songsInfo.getArtistName());
+
         Bundle bundle = new Bundle();
         bundle.putParcelable("selected song", songsInfo);
         PlayerFragment playerFragment = new PlayerFragment();
