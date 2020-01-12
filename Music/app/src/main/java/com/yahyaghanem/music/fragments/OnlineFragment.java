@@ -27,7 +27,7 @@ public class OnlineFragment extends Fragment {
     @BindView(R.id.play)
     Button play;
     private SongsInfo songsInfo = new SongsInfo();
-    PlayerFragment playerFragment = new PlayerFragment();
+    private PlayerFragment playerFragment = new PlayerFragment();
 
 
     public OnlineFragment() {

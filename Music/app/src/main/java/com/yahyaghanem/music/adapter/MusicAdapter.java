@@ -49,10 +49,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
             public void onClick(View v) {
                 Log.d("adapter", "onClick: ");
                 if (mselectedSongInterface != null) {
-                    if (position != RecyclerView.NO_POSITION) {
-                        Log.d("adapter", "onClick1: ");
-                        mselectedSongInterface.onItemClickListener(songs.get(position));
-                    }
+                    Log.d("adapter", "onClick1: ");
+                    mselectedSongInterface.onItemClickListener(songs.get(position));
                 }
             }
         });
@@ -71,7 +69,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
 
         TextView artist, title ;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
              artist = itemView.findViewById(R.id.artist_name);
              title = itemView.findViewById(R.id.title_name);

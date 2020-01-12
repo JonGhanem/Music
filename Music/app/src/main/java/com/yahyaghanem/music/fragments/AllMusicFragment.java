@@ -28,8 +28,6 @@ import butterknife.ButterKnife;
  */
 public class AllMusicFragment extends Fragment {
 
-    private MusicAdapter musicAdapter;
-    private List<SongsInfo> songsInfos = new ArrayList<>();
     @BindView(R.id.all_products_recyclerview)
     RecyclerView recyclerView;
 
@@ -49,11 +47,11 @@ public class AllMusicFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
 
-        songsInfos = getArguments().getParcelableArrayList("listofsongs");
+        List<SongsInfo> songsInfos = getArguments().getParcelableArrayList("listofsongs");
         //ADAPTER
         Log.d("callfragment", "songs count = " + songsInfos.size());
 
-        musicAdapter = new MusicAdapter(songsInfos);
+        MusicAdapter musicAdapter = new MusicAdapter(songsInfos);
         if (getActivity() instanceof SelectedSongInterface) {
             musicAdapter.setmSelectedItemIterface((SelectedSongInterface) getActivity());
         }

@@ -80,11 +80,7 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
 
                 player.setDataSource(songsInfo.getSongUrl());
                 player.prepareAsync();
-            } catch (IllegalArgumentException e) {
-                Toast.makeText(getApplication(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-            } catch (SecurityException e) {
-                Toast.makeText(getApplication(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-            } catch (IllegalStateException e) {
+            } catch (IllegalArgumentException | SecurityException | IllegalStateException e) {
                 Toast.makeText(getApplication(), "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -119,6 +115,7 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
                 .setLargeIcon(icon)
                 .setContentTitle(songsInfo.getSongName())
                 .setContentText(songsInfo.getArtistName())
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                 .addAction(R.drawable.ic_pause_circle, "Pause",
                         PendingIntent.getBroadcast(this,
                                 1,
@@ -134,6 +131,7 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
                 .setLargeIcon(icon)
                 .setContentTitle(songsInfo.getSongName())
                 .setContentText(songsInfo.getArtistName())
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                 .addAction(R.drawable.ic_play_circle, "play",
                         PendingIntent.getBroadcast(this,
                                 1,
@@ -174,9 +172,6 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
 
     @Override
     public void onTrackClose() {
-        player.stop();
-        player.release();
-        unregisterReceiver(serviceBroadcast);
         stopSelf();
     }
 }

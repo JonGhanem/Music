@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import com.yahyaghanem.music.model.SongsInfo;
 import com.yahyaghanem.music.notification.ServiceBroadcast;
 import com.yahyaghanem.music.services.MusicService;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,7 +30,6 @@ import butterknife.ButterKnife;
  */
 public class PlayerFragment extends Fragment implements ServiceBroadcast.Playable{
 
-    private SongsInfo songsInfo = new SongsInfo();
     @BindView(R.id.muisc_title)
     TextView title;
     @BindView(R.id.music_artist)
@@ -36,7 +38,6 @@ public class PlayerFragment extends Fragment implements ServiceBroadcast.Playabl
     ImageView pause;
     private boolean playFlag = true;
     private ServiceBroadcast serviceBroadcast;
-    private Intent intent;
 
 
     public PlayerFragment() {
@@ -55,42 +56,48 @@ public class PlayerFragment extends Fragment implements ServiceBroadcast.Playabl
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        serviceBroadcast = new ServiceBroadcast();
-        serviceBroadcast.setPlayable(this);
-        getActivity().registerReceiver(serviceBroadcast, new IntentFilter("pause"));
-        getActivity().registerReceiver(serviceBroadcast, new IntentFilter("play"));
+        registerBroadcast();
 
-        songsInfo = getArguments().getParcelable("selected song");
+
+        SongsInfo songsInfo = getArguments().getParcelable("selected song");
         artist.setText(songsInfo.getArtistName());
         title.setText(songsInfo.getSongName());
 
         Bundle bundle = new Bundle();
-        intent = new Intent(getActivity(), MusicService.class);
+        Intent intent = new Intent(getActivity(), MusicService.class);
         bundle.putParcelable("song", songsInfo);
         intent.putExtras(bundle);
-        getActivity().startService(intent);
+        Objects.requireNonNull(getActivity()).startService(intent);
 
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (playFlag) {
                     playFlag = false;
-                    getContext().sendBroadcast(new Intent("pause"));
+                    Objects.requireNonNull(getContext()).sendBroadcast(new Intent("pause"));
 
                 } else {
                     playFlag = true;
-                    getContext().sendBroadcast(new Intent("play"));
+                    Objects.requireNonNull(getContext()).sendBroadcast(new Intent("play"));
 
                 }
             }
         });
     }
 
+    private void registerBroadcast() {
+        serviceBroadcast = new ServiceBroadcast();
+        serviceBroadcast.setPlayable(this);
+        Objects.requireNonNull(getActivity()).registerReceiver(serviceBroadcast, new IntentFilter("pause"));
+        getActivity().registerReceiver(serviceBroadcast, new IntentFilter("play"));
+        getActivity().registerReceiver(serviceBroadcast, new IntentFilter("close"));
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getContext().unregisterReceiver(serviceBroadcast);
+        Objects.requireNonNull(getContext()).unregisterReceiver(serviceBroadcast);
     }
 
     @Override
@@ -105,6 +112,7 @@ public class PlayerFragment extends Fragment implements ServiceBroadcast.Playabl
 
     @Override
     public void onTrackClose() {
-
+        Objects.requireNonNull(getActivity()).onBackPressed();
     }
+
 }
