@@ -34,8 +34,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks, SelectedSongInterface{
     //button objects
-    private Button buttonStart;
-    private Button buttonStop;
+    private Button deviceSongs;
+    private Button onlineLink;
     private List<SongsInfo> songs = new ArrayList<>();
 
     @Override
@@ -48,21 +48,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setView() {
         //getting buttons from xml
-        buttonStart = findViewById(R.id.start_button);
-        buttonStop = findViewById(R.id.stop_button);
+        deviceSongs = findViewById(R.id.device_songs);
+        onlineLink = findViewById(R.id.online_link);
 
         //attaching onclicklistener to buttons
-        buttonStart.setOnClickListener(this);
-        buttonStop.setOnClickListener(this);
+        deviceSongs.setOnClickListener(this);
+        onlineLink.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == buttonStart) {
+        if (view == deviceSongs) {
             //starting service
             //startService(new Intent(this, MusicService.class));
             getmusic();
-        } else if (view == buttonStop) {
+        } else if (view == onlineLink) {
             OnlineFragment onlineFragment = new OnlineFragment();
             getSupportFragmentManager()
                     .beginTransaction()

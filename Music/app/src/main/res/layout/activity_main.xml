@@ -9,17 +9,17 @@
     tools:context=".activities.MainActivity">
 
     <Button
-        android:id="@+id/start_button"
+        android:id="@+id/device_songs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:text="On Device"
-        app:layout_constraintEnd_toEndOf="@+id/stop_button"
-        app:layout_constraintStart_toStartOf="@+id/stop_button"
-        app:layout_constraintTop_toBottomOf="@+id/stop_button" />
+        app:layout_constraintEnd_toEndOf="@+id/online_link"
+        app:layout_constraintStart_toStartOf="@+id/online_link"
+        app:layout_constraintTop_toBottomOf="@+id/online_link" />
 
     <Button
-        android:id="@+id/stop_button"
+        android:id="@+id/online_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"

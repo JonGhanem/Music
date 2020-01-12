@@ -47,6 +47,8 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
         serviceBroadcast.setPlayable(this);
         registerReceiver(serviceBroadcast,new IntentFilter("pause"));
         registerReceiver(serviceBroadcast,new IntentFilter("play"));
+        registerReceiver(serviceBroadcast,new IntentFilter("close"));
+
     }
 
     @Override
@@ -106,6 +108,8 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
 
         Intent playIntent = new Intent("play");
         Intent pauseIntent = new Intent("pause");
+        Intent closeIntent = new Intent("close");
+
 
 
         pauseNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -135,6 +139,11 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
                                 1,
                                 playIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
+                .addAction(R.drawable.ic_close_black, "close",
+                        PendingIntent.getBroadcast(this,
+                                1,
+                                closeIntent,
+                                PendingIntent.FLAG_CANCEL_CURRENT))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build();
 
@@ -161,5 +170,13 @@ public class MusicService extends Service implements ServiceBroadcast.Playable {
         player.pause();
         startForeground(1,playNotification);
         Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTrackClose() {
+        player.stop();
+        player.release();
+        unregisterReceiver(serviceBroadcast);
+        stopSelf();
     }
 }

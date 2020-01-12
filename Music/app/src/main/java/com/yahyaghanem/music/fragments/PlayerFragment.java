@@ -1,37 +1,26 @@
 package com.yahyaghanem.music.fragments;
 
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.yahyaghanem.music.R;
-import com.yahyaghanem.music.activities.MainActivity;
 import com.yahyaghanem.music.model.SongsInfo;
 import com.yahyaghanem.music.notification.ServiceBroadcast;
 import com.yahyaghanem.music.services.MusicService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.yahyaghanem.music.notification.App.CHANNEL_ID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,5 +101,10 @@ public class PlayerFragment extends Fragment implements ServiceBroadcast.Playabl
     @Override
     public void onTrackPause() {
         pause.setImageResource(R.drawable.ic_play_circle);
+    }
+
+    @Override
+    public void onTrackClose() {
+
     }
 }

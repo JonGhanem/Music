@@ -11,6 +11,8 @@ public class ServiceBroadcast extends BroadcastReceiver {
         void onTrackPlay();
 
         void onTrackPause();
+
+        void onTrackClose();
     }
 
     private Playable playable;
@@ -28,7 +30,9 @@ public class ServiceBroadcast extends BroadcastReceiver {
             case "play":
                 playable.onTrackPlay();
                 break;
-
+            case "close":
+                playable.onTrackClose();
+                break;
         }
     }
 }
